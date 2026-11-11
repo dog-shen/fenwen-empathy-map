@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>公文分文｜同理心地圖（科室主管視角）</title>
+  <style>
+    :root {
+      --bg-dark: #0b1120;
+      --bg-panel: rgba(15, 23, 42, 0.92);
+      --bg-card: rgba(30, 41, 59, 0.75);
+      --border-color: rgba(148, 163, 184, 0.2);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --c-says: #38bdf8;
+      --c-thinks: #a855f7;
+      --c-does: #10b981;
+      --c-feels: #f59e0b;
+      --c-pains: #f43f5e;
+      --c-gains: #22d3ee;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 50% 30%, #131c31 0%, #090d16 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      padding: 26px 28px 22px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 5px 11px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    header h1 { font-size: 21px; font-weight: 700; letter-spacing: 0.3px; margin-top: 10px; }
+    header p { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
+
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+
+    section { margin-top: 34px; }
+
+    .sec-title { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+
+    .sec-num {
+      background: rgba(56, 189, 248, 0.16);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+
+    .sec-title h2 { font-size: 18px; font-weight: 700; }
+    .sec-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; padding-left: 2px; }
+
+    /* ---------- Persona 卡片 ---------- */
+    .persona-card {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 18px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .persona-avatar {
+      background: linear-gradient(135deg, #1e3a5f, #312e81);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 18px 10px;
+      min-height: 200px;
+    }
+
+    .persona-avatar .emoji { font-size: 52px; }
+    .persona-avatar .name { font-weight: 700; font-size: 15px; }
+    .persona-avatar .role { font-size: 11.5px; color: var(--text-muted); text-align: center; line-height: 1.5; }
+
+    .persona-body { display: flex; flex-direction: column; gap: 12px; }
+
+    .quote-box {
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+
+    .kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+
+    .kv {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+
+    .kv b { display: block; font-size: 11.5px; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; letter-spacing: 0.5px; }
+    .kv span { font-size: 13px; color: #e2e8f0; line-height: 1.55; }
+
+    /* ---------- 同理心地圖 ---------- */
+    .empathy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .empathy-cell {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .empathy-cell::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; }
+    .empathy-cell.says::before { background: var(--c-says); }
+    .empathy-cell.thinks::before { background: var(--c-thinks); }
+    .empathy-cell.does::before { background: var(--c-does); }
+    .empathy-cell.feels::before { background: var(--c-feels); }
+    .empathy-cell.pains::before { background: var(--c-pains); }
+    .empathy-cell.gains::before { background: var(--c-gains); }
+
+    .cell-head { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+    .cell-icon { font-size: 19px; }
+    .cell-title { font-size: 14.5px; font-weight: 700; letter-spacing: 0.3px; }
+    .cell-title small { font-weight: 500; color: var(--text-muted); font-size: 11px; margin-left: 6px; }
+
+    .says .cell-title { color: var(--c-says); }
+    .thinks .cell-title { color: var(--c-thinks); }
+    .does .cell-title { color: var(--c-does); }
+    .feels .cell-title { color: var(--c-feels); }
+    .pains .cell-title { color: var(--c-pains); }
+    .gains .cell-title { color: var(--c-gains); }
+
+    .empathy-cell ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+    .empathy-cell li {
+      font-size: 13px;
+      line-height: 1.62;
+      color: #e2e8f0;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .empathy-cell li::before { content: "▸"; position: absolute; left: 0; opacity: 0.55; }
+    .says li::before { color: var(--c-says); }
+    .thinks li::before { color: var(--c-thinks); }
+    .does li::before { color: var(--c-does); }
+    .feels li::before { color: var(--c-feels); }
+    .pains li::before { color: var(--c-pains); }
+    .gains li::before { color: var(--c-gains); }
+
+    .empathy-cell li em { font-style: normal; color: var(--text-muted); font-size: 12px; }
+
+    .verify-note {
+      margin-top: 14px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px dashed rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #fde68a;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 18px 20px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 11.5px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .empathy-grid { grid-template-columns: 1fr; }
+      .persona-card { grid-template-columns: 1fr; }
+      .persona-avatar { min-height: 140px; }
+      header h1 { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <span class="brand-badge">MODA × AI TalenTech｜設計思考實作</span>
+    </div>
+    <h1 style="margin-top:10px;">「公文分文」流程｜同理心地圖</h1>
+    <p>Primary Persona：科室主管（分文決策者）・對應講義 P.17-19（同理心地圖六面向）</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===================== Persona ===================== -->
+  <section>
+    <div class="sec-title"><span class="sec-num">STEP 0</span><h2>主要人物誌（Primary Persona）</h2></div>
+    <div class="sec-sub">以「每天負責公文分文的科室主管」為核心使用者，還原其真實工作情境。</div>
+    <div class="persona-card">
+      <div class="persona-avatar">
+        <span class="emoji">👨‍💼</span>
+        <span class="name">王科長（化名）</span>
+        <span class="role">某機關業務科室主管<br/>任職 25 年・掌分文權責</span>
+      </div>
+      <div class="persona-body">
+        <div class="quote-box">
+          「分文看起來只是點幾下滑鼠，但每一件都要判斷性質、對照職掌、想誰有空——<b>每天六十到一百多件，光分文就吃掉我一個多小時</b>，這段時間我的本職業務全都要排隊。」
+        </div>
+        <div class="kv-grid">
+          <div class="kv"><b>每日公文量</b><span>60–120 件（含電子公文系統 + 少量紙本簽收）</span></div>
+          <div class="kv"><b>所屬部屬</b><span>8 位承辦人，職掌各異、資歷落差大，另有 2 位經常支援他科</span></div>
+          <div class="kv"><b>核心工具</b><span>公文系統待分文清單、事務分配表（書面）、紙本職掌表、桌上便條與個人筆記</span></div>
+          <div class="kv"><b>分文時機</b><span>每日固定 2 個時段（上午 09:00 前、下午 14:00 前）需全數消化</span></div>
+          <div class="kv"><b>最大壓力源</b><span>分錯退文、稽延列管、部屬質疑分案不均、人事異動後規則斷鏈</span></div>
+          <div class="kv"><b>成功定義</b><span>當日公文當日分畢、零退文、負載大致公平、自己還有時間辦本業</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 同理心地圖 ===================== -->
+  <section>
+    <div class="sec-title"><span class="sec-num">STEP 1</span><h2>同理心地圖（六面向）</h2></div>
+    <div class="sec-sub">從王科長的工作經驗出發，區分「事實」與「待驗證假設」——引號內容為訪談引語，其餘為行為觀察與推論。</div>
+    <div class="empathy-grid">
+
+      <div class="empathy-cell says">
+        <div class="cell-head"><span class="cell-icon">💬</span><span class="cell-title">Says<small>說什麼（引語）</small></span></div>
+        <ul>
+          <li>「這件到底是業務單位的事，還是我們科的事？」</li>
+          <li>「這份公文夾了三個案由，要拆給三個人還是找一個人統辦？」</li>
+          <li>「小王這禮拜請假，他職掌的案件要改分給誰？」</li>
+          <li>「這個主題去年辦過，當時是誰承辦的？有前例可循嗎？」</li>
+          <li>「先分出去再說，分錯了承辦會再退回來。」</li>
+          <li>「每天光分文就花掉我一個多小時，重複的事情為什麼要我每天用人腦判斷？」</li>
+        </ul>
+      </div>
+
+      <div class="empathy-cell thinks">
+        <div class="cell-head"><span class="cell-icon">🧠</span><span class="cell-title">Thinks<small>想什麼（內心推理）</small></span></div>
+        <ul>
+          <li>判斷公文性質高度依賴<b>我對單位業務與每位同仁職掌的記憶</b>，這些知識只存在我腦中。</li>
+          <li>分錯會被上級關切、被同仁質疑公平性；<b>寧可慢一點，也不敢亂分</b>。</li>
+          <li>事務分配表是原則，但實務總有模糊地帶——「照表分」只對七成公文有效。</li>
+          <li>「如果把我的判斷規則寫下來，是不是不用每一件都重新想？」</li>
+          <li>同仁覺得我分案不均，但<b>我根本沒有工具即時看到每個人的案件負載</b>。</li>
+        </ul>
+      </div>
+
+      <div class="empathy-cell does">
+        <div class="cell-head"><span class="cell-icon">🖐️</span><span class="cell-title">Does<small>做什麼（行為）</small></span></div>
+        <ul>
+          <li>每天固定時段登入公文系統，逐一開啟待分文清單。</li>
+          <li>逐件閱讀<b>主旨、案由、來文機關、附件</b>，判斷業務性質。</li>
+          <li>切換視窗翻查<b>事務分配表與職掌表</b>（書面/舊檔案），比對承辦人。</li>
+          <li>在系統點選承辦人、夾註分文意見後送出。</li>
+          <li>遇例外時<b>打電話或傳訊息</b>問同仁、請示長官或找前科主管確認。</li>
+          <li>電腦螢幕邊貼滿便條——用土法煉鋼記住「哪類案件找誰」。</li>
+        </ul>
+      </div>
+
+      <div class="empathy-cell feels">
+        <div class="cell-head"><span class="cell-icon">💛</span><span class="cell-title">Feels<small>感受（情緒）</small></span></div>
+        <ul>
+          <li>面對整批待分文時的<b>時間壓力與煩躁</b>（「又來了」）。</li>
+          <li>遇到性質不明、跨域公文時的<b>焦慮</b>——怕分錯被退件。</li>
+          <li>重複判斷同類公文時的<b>無聊與疲乏</b>（低挑戰、高重複）。</li>
+          <li>分文被退回時的<b>挫折感</b>（質疑自己的判斷與權威）。</li>
+          <li>準時清空待分文籃時短暫的<b>解脫</b>，但知道明天整個循環重來。</li>
+        </ul>
+      </div>
+
+      <div class="empathy-cell pains">
+        <div class="cell-head"><span class="cell-icon">💢</span><span class="cell-title">Pains<small>痛點</small></span></div>
+        <ul>
+          <li><b>最耗時間</b>：每日 60–120 分鐘的重複閱讀與判斷（依工作量與當日件數）<em>・每日發生</em></li>
+          <li><b>最依賴經驗</b>：分文規則是主管腦中的隱性知識；人事異動、請假即斷鏈</li>
+          <li><b>最容易出錯</b>：案由誤判、一文多案由拆分錯誤、跨域公文歸屬錯科</li>
+          <li><b>最影響體驗</b>：分案不均引發公平性質疑；退文改分產生重工與解釋成本</li>
+          <li>事務分配表更新不及——<b>書面規則與實務長期脫節</b>，例外常態化</li>
+        </ul>
+      </div>
+
+      <div class="empathy-cell gains">
+        <div class="cell-head"><span class="cell-icon">✨</span><span class="cell-title">Gains<small>期待（Gains）</small></span></div>
+        <ul>
+          <li>公文一進來就有<b>「分文建議」自動跳出</b>（附案由摘要與判斷依據）。</li>
+          <li>系統依<b>職掌＋即時負載</b>自動推薦承辦人，兼顧公平。</li>
+          <li>例外案件（請假、跨科、多重案由）自動提示<b>備援人選與理由</b>。</li>
+          <li>主管只需<b>核定（Human Gate）</b>，不必逐件耗費腦力重新判斷。</li>
+          <li>分文判斷規則<b>外顯為機關共用資產</b>（SKILL.md），不因人異動而失傳。</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="verify-note">
+      ⚠️ <b>事實與待驗證假設的區分</b>：本圖引語（Says）與行為（Does）來自情境訪談觀察；Thinks 與 Feels 為推論，須經真人訪談查證；Pains 的「60–120 分鐘」「七成公文照表可分」等數據為待驗證假設，導入前應以實際計時與抽樣統計確認。
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  《AI 驅動政府流程再造》工作坊教材・設計思考實作練習｜同理心地圖六面向（講義 P.17-19）<br/>
+  本頁內容為課堂示範用途，人物為化名，情境細節應於實際場域訪談查證後修正。
+</footer>
+
+</body>
+</html>
