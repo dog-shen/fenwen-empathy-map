@@ -72,6 +72,54 @@
     .sec-title h2 { font-size: 18px; font-weight: 700; }
     .sec-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; padding-left: 2px; }
 
+    /* ---------- 分文規則卡 ---------- */
+    .rule-banner {
+      display: grid;
+      grid-template-columns: 1fr 54px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-bottom: 16px;
+    }
+
+    .rule-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; }
+
+    .rule-dedicated::before { background: #a855f7; }
+    .rule-roundrobin::before { background: #10b981; }
+
+    .rule-card .rc-tag {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 5px;
+      padding: 2px 8px;
+      margin-bottom: 8px;
+    }
+
+    .rule-dedicated .rc-tag { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; border: 1px solid rgba(168, 85, 247, 0.45); }
+    .rule-roundrobin .rc-tag { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.45); }
+
+    .rule-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #f8fafc; }
+    .rule-card p { font-size: 12.5px; line-height: 1.65; color: #cbd5e1; }
+
+    .rule-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
     /* ---------- Persona 卡片 ---------- */
     .persona-card {
       display: grid;
@@ -200,6 +248,8 @@
       .empathy-grid { grid-template-columns: 1fr; }
       .persona-card { grid-template-columns: 1fr; }
       .persona-avatar { min-height: 140px; }
+      .rule-banner { grid-template-columns: 1fr; }
+      .rule-arrow { transform: rotate(90deg); }
       header h1 { font-size: 17px; }
     }
   </style>
@@ -218,6 +268,25 @@
 
 <div class="wrap">
 
+  <!-- ===================== 分文規則（領域知識） ===================== -->
+  <section>
+    <div class="sec-title"><span class="sec-num">分文規則</span><h2>公文分文的兩種類型</h2></div>
+    <div class="sec-sub">分文是「兩段式判斷」：先辨識公文屬性，再決定派工方式——這是整個旅程的核心決策邏輯。</div>
+    <div class="rule-banner">
+      <div class="rule-card rule-dedicated">
+        <span class="rc-tag">TYPE 1・特定業務公文</span>
+        <h3>🧭 專人承辦</h3>
+        <p>涉及特定職掌業務的公文（如採購、法制、資訊、主計等專業案），<b>依事務分配表分文給對應的專責承辦人員</b>——誰職掌、誰承辦。</p>
+      </div>
+      <div class="rule-arrow">＋</div>
+      <div class="rule-card rule-roundrobin">
+        <span class="rc-tag">TYPE 2・一般通用公文</span>
+        <h3>♻️ 輪分（輪流派工）</h3>
+        <p>大家都會承辦的例行/通用公文（如一般函復、資料提供、轉知周知），<b>採輪分方式依序輪流派工</b>，兼顧工作量均攤。</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== Persona ===================== -->
   <section>
     <div class="sec-title"><span class="sec-num">STEP 0</span><h2>主要人物誌（Primary Persona）</h2></div>
@@ -230,15 +299,16 @@
       </div>
       <div class="persona-body">
         <div class="quote-box">
-          「分文看起來只是點幾下滑鼠，但每一件都要判斷性質、對照職掌、想誰有空——<b>每天六十到一百多件，光分文就吃掉我一個多小時</b>，這段時間我的本職業務全都要排隊。」
+          「分文看起來只是點幾下滑鼠，但每一件都要先判斷是<b>特定業務</b>還是<b>輪分的一般件</b>——特定業務要對照事務分配表找專責的人，一般件要照輪分序輪流。<b>誰請假、輪到誰，全都在我腦子裡。</b>每天六十到一百多件，光分文就吃掉我一個多小時，這段時間我的本職業務全都要排隊。」
         </div>
         <div class="kv-grid">
           <div class="kv"><b>每日公文量</b><span>60–120 件（含電子公文系統 + 少量紙本簽收）</span></div>
-          <div class="kv"><b>所屬部屬</b><span>8 位承辦人，職掌各異、資歷落差大，另有 2 位經常支援他科</span></div>
-          <div class="kv"><b>核心工具</b><span>公文系統待分文清單、事務分配表（書面）、紙本職掌表、桌上便條與個人筆記</span></div>
+          <div class="kv"><b>所屬部屬</b><span>8 位承辦人：各有專責職掌（特定業務），另設一般件輪分圈</span></div>
+          <div class="kv"><b>分文規則</b><span>特定業務→依事務分配表分給專責承辦人；一般通用件→依序輪分</span></div>
+          <div class="kv"><b>核心工具</b><span>公文系統待分文清單、事務分配表（書面）、自製輪分表、桌上便條</span></div>
           <div class="kv"><b>分文時機</b><span>每日固定 2 個時段（上午 09:00 前、下午 14:00 前）需全數消化</span></div>
-          <div class="kv"><b>最大壓力源</b><span>分錯退文、稽延列管、部屬質疑分案不均、人事異動後規則斷鏈</span></div>
-          <div class="kv"><b>成功定義</b><span>當日公文當日分畢、零退文、負載大致公平、自己還有時間辦本業</span></div>
+          <div class="kv"><b>最大壓力源</b><span>特定/一般界線模糊、輪分序中斷、退文改分、部屬質疑分案不均</span></div>
+          <div class="kv"><b>成功定義</b><span>當日分畢、零退文、專責正確、輪分大致公平、自己還有時間辦本業</span></div>
         </div>
       </div>
     </div>
@@ -253,9 +323,9 @@
       <div class="empathy-cell says">
         <div class="cell-head"><span class="cell-icon">💬</span><span class="cell-title">Says<small>說什麼（引語）</small></span></div>
         <ul>
-          <li>「這件到底是業務單位的事，還是我們科的事？」</li>
+          <li>「這件到底是<b>特定業務</b>還是<b>一般輪分件</b>？看起來兩邊都沾。」</li>
           <li>「這份公文夾了三個案由，要拆給三個人還是找一個人統辦？」</li>
-          <li>「小王這禮拜請假，他職掌的案件要改分給誰？」</li>
+          <li>「輪分輪到誰了？小王請假這一輪要跳過嗎？」</li>
           <li>「這個主題去年辦過，當時是誰承辦的？有前例可循嗎？」</li>
           <li>「先分出去再說，分錯了承辦會再退回來。」</li>
           <li>「每天光分文就花掉我一個多小時，重複的事情為什麼要我每天用人腦判斷？」</li>
@@ -265,11 +335,12 @@
       <div class="empathy-cell thinks">
         <div class="cell-head"><span class="cell-icon">🧠</span><span class="cell-title">Thinks<small>想什麼（內心推理）</small></span></div>
         <ul>
-          <li>判斷公文性質高度依賴<b>我對單位業務與每位同仁職掌的記憶</b>，這些知識只存在我腦中。</li>
-          <li>分錯會被上級關切、被同仁質疑公平性；<b>寧可慢一點，也不敢亂分</b>。</li>
-          <li>事務分配表是原則，但實務總有模糊地帶——「照表分」只對七成公文有效。</li>
+          <li>分文是<b>兩段式判斷</b>：先分「特定業務 vs 一般件」，特定業務照表找專責人、一般件照輪分序走。</li>
+          <li>但<b>輪分狀態（輪到誰）、請假跳過、補位順序，全靠我腦中與紙本記錄維護</b>。</li>
+          <li>判斷公文屬性依賴<b>我對業務與每位同仁職掌的記憶</b>；寧可慢一點，也不敢亂分。</li>
+          <li>事務分配表是原則，但「特定 vs 一般」的界線總有模糊地帶——灰色案件最費神。</li>
           <li>「如果把我的判斷規則寫下來，是不是不用每一件都重新想？」</li>
-          <li>同仁覺得我分案不均，但<b>我根本沒有工具即時看到每個人的案件負載</b>。</li>
+          <li>同仁覺得輪分不公平，但<b>我沒有工具即時看到每個人的案件負載</b>。</li>
         </ul>
       </div>
 
@@ -277,11 +348,11 @@
         <div class="cell-head"><span class="cell-icon">🖐️</span><span class="cell-title">Does<small>做什麼（行為）</small></span></div>
         <ul>
           <li>每天固定時段登入公文系統，逐一開啟待分文清單。</li>
-          <li>逐件閱讀<b>主旨、案由、來文機關、附件</b>，判斷業務性質。</li>
-          <li>切換視窗翻查<b>事務分配表與職掌表</b>（書面/舊檔案），比對承辦人。</li>
-          <li>在系統點選承辦人、夾註分文意見後送出。</li>
-          <li>遇例外時<b>打電話或傳訊息</b>問同仁、請示長官或找前科主管確認。</li>
-          <li>電腦螢幕邊貼滿便條——用土法煉鋼記住「哪類案件找誰」。</li>
+          <li>逐件閱讀<b>主旨、案由、來文機關、附件</b>，先判斷「特定業務或一般件」。</li>
+          <li>特定業務件→切換視窗翻查<b>事務分配表</b>，找對應專責承辦人。</li>
+          <li>一般件→依<b>自製輪分表</b>派給下一位，並手動更新「現在輪到誰」。</li>
+          <li>承辦人請假時<b>跳過該員、調整輪分補位</b>；界線模糊時打電話問同仁或請示長官。</li>
+          <li>電腦螢幕邊貼滿便條——記住「哪類找誰」與「輪分序到誰了」。</li>
         </ul>
       </div>
 
@@ -289,39 +360,39 @@
         <div class="cell-head"><span class="cell-icon">💛</span><span class="cell-title">Feels<small>感受（情緒）</small></span></div>
         <ul>
           <li>面對整批待分文時的<b>時間壓力與煩躁</b>（「又來了」）。</li>
-          <li>遇到性質不明、跨域公文時的<b>焦慮</b>——怕分錯被退件。</li>
-          <li>重複判斷同類公文時的<b>無聊與疲乏</b>（低挑戰、高重複）。</li>
-          <li>分文被退回時的<b>挫折感</b>（質疑自己的判斷與權威）。</li>
-          <li>準時清空待分文籃時短暫的<b>解脫</b>，但知道明天整個循環重來。</li>
+          <li>遇到「特定 vs 一般」界線模糊的公文時的<b>焦慮</b>——怕分錯被退件。</li>
+          <li>輪分序被請假、積案打斷時，<b>心算「下一位輪到誰」的計算壓力</b>。</li>
+          <li>重複判斷同類公文的<b>無聊與疲乏</b>（低挑戰、高重複）。</li>
+          <li>分文被退回時的<b>挫折感</b>；準時清空待分文籃時短暫的<b>解脫</b>——但明天循環重來。</li>
         </ul>
       </div>
 
       <div class="empathy-cell pains">
         <div class="cell-head"><span class="cell-icon">💢</span><span class="cell-title">Pains<small>痛點</small></span></div>
         <ul>
-          <li><b>最耗時間</b>：每日 60–120 分鐘的重複閱讀與判斷（依工作量與當日件數）<em>・每日發生</em></li>
-          <li><b>最依賴經驗</b>：分文規則是主管腦中的隱性知識；人事異動、請假即斷鏈</li>
-          <li><b>最容易出錯</b>：案由誤判、一文多案由拆分錯誤、跨域公文歸屬錯科</li>
-          <li><b>最影響體驗</b>：分案不均引發公平性質疑；退文改分產生重工與解釋成本</li>
-          <li>事務分配表更新不及——<b>書面規則與實務長期脫節</b>，例外常態化</li>
+          <li><b>最耗時間</b>：每日 60–120 分鐘的兩段式判斷與對照<em>・每日發生</em></li>
+          <li><b>最依賴經驗</b>：專責對照、輪分序、例外調整全是主管腦中的隱性知識；人事異動、請假即斷鏈</li>
+          <li><b>最容易出錯</b>：特定/一般誤判、案由誤判、一文多案由拆分錯誤、輪分跳錯位</li>
+          <li><b>輪分機制無系統化</b>：輪分狀態靠紙本與記憶維護，一亂就失準、公平性遭質疑</li>
+          <li><b>最影響體驗</b>：退文改分重工、分案不均引發解釋成本；分配表與實務脫節</li>
         </ul>
       </div>
 
       <div class="empathy-cell gains">
         <div class="cell-head"><span class="cell-icon">✨</span><span class="cell-title">Gains<small>期待（Gains）</small></span></div>
         <ul>
-          <li>公文一進來就有<b>「分文建議」自動跳出</b>（附案由摘要與判斷依據）。</li>
-          <li>系統依<b>職掌＋即時負載</b>自動推薦承辦人，兼顧公平。</li>
-          <li>例外案件（請假、跨科、多重案由）自動提示<b>備援人選與理由</b>。</li>
-          <li>主管只需<b>核定（Human Gate）</b>，不必逐件耗費腦力重新判斷。</li>
-          <li>分文判斷規則<b>外顯為機關共用資產</b>（SKILL.md），不因人異動而失傳。</li>
+          <li>公文一進來就有<b>「分文建議」自動跳出</b>：先標示特定/一般屬性，再附案由摘要與判斷依據。</li>
+          <li><b>特定業務件</b>自動對照事務分配表推薦專責承辦人（附前例出處）。</li>
+          <li><b>一般件自動輪分</b>：系統維護輪分序與請假跳過，兼顧負載公平。</li>
+          <li>界線模糊案件自動提示<b>「疑似跨域・建議人工確認」</b>與備援人選。</li>
+          <li>主管只需<b>核定（Human Gate）</b>；分文規則<b>外顯為 SKILL.md 共用資產</b>，不因人異動而失傳。</li>
         </ul>
       </div>
 
     </div>
 
     <div class="verify-note">
-      ⚠️ <b>事實與待驗證假設的區分</b>：本圖引語（Says）與行為（Does）來自情境訪談觀察；Thinks 與 Feels 為推論，須經真人訪談查證；Pains 的「60–120 分鐘」「七成公文照表可分」等數據為待驗證假設，導入前應以實際計時與抽樣統計確認。
+      ⚠️ <b>事實與待驗證假設的區分</b>：本圖引語（Says）與行為（Does）來自情境訪談觀察；Thinks 與 Feels 為推論，須經真人訪談查證。「特定業務 vs 一般件」的分類清單、輪分起訖與跳過規則、「60–120 分鐘」等數據皆為<b>待驗證假設</b>，導入前應以實際計時、抽樣統計與規則文件查證確認。
     </div>
   </section>
 
