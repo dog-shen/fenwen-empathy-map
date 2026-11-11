@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <title>公文分文｜同理心地圖（畫布版）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background: #090d16;
+      color: #f1f5f9;
+      width: 1440px;
+      padding: 18px;
+    }
+
+    .canvas { position: relative; width: 1404px; }
+
+    /* ---------- 頂部標題列 ---------- */
+    .top-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .tb-left { display: flex; align-items: center; gap: 14px; }
+
+    .tb-badge {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #fff; font-weight: 700; font-size: 13px;
+      padding: 6px 12px; border-radius: 8px; white-space: nowrap;
+    }
+
+    .tb-title h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+    .tb-title p { font-size: 12px; color: #94a3b8; margin-top: 3px; }
+
+    .tb-rules { display: flex; gap: 8px; }
+
+    .rule-chip {
+      font-size: 12px; font-weight: 700; border-radius: 8px;
+      padding: 7px 12px; line-height: 1.4; max-width: 300px;
+    }
+
+    .rc-dedicated { background: rgba(168, 85, 247, 0.14); border: 1px solid rgba(168, 85, 247, 0.5); color: #d8b4fe; }
+    .rc-round { background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.5); color: #6ee7b7; }
+
+    /* ---------- 主畫布 ---------- */
+    .board { display: grid; grid-template-columns: 275px 1fr 275px; gap: 14px; }
+
+    .side {
+      border-radius: 16px; padding: 16px 15px;
+      display: flex; flex-direction: column;
+    }
+
+    .side-gains { background: rgba(34, 211, 238, 0.07); border: 1.5px solid rgba(34, 211, 238, 0.4); }
+    .side-pains { background: rgba(244, 63, 94, 0.07); border: 1.5px solid rgba(244, 63, 94, 0.42); }
+
+    .side h2 { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .side-gains h2 { color: #22d3ee; }
+    .side-pains h2 { color: #fb7185; }
+    .side .sub { font-size: 10.5px; color: #94a3b8; margin-bottom: 10px; letter-spacing: 1px; }
+
+    .side ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+
+    .side li {
+      font-size: 12.5px; line-height: 1.55; color: #e2e8f0;
+      padding-left: 14px; position: relative;
+    }
+    .side li::before { content: "▸"; position: absolute; left: 0; }
+    .side-gains li::before { color: #22d3ee; }
+    .side-pains li::before { color: #fb7185; }
+    .side li b { color: #f8fafc; }
+
+    .side .badge-line {
+      margin-top: auto; padding-top: 10px;
+      font-size: 10.5px; color: #94a3b8; line-height: 1.6;
+      border-top: 1px dashed rgba(148, 163, 184, 0.25);
+    }
+
+    /* ---------- 四象限 ---------- */
+    .quads { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; }
+
+    .q {
+      border-radius: 16px; padding: 18px 20px 14px;
+      position: relative; overflow: hidden;
+    }
+
+    .q::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+
+    .q-says { background: rgba(56, 189, 248, 0.07); border: 1.5px solid rgba(56, 189, 248, 0.38); }
+    .q-says::before { background: #38bdf8; }
+    .q-thinks { background: rgba(168, 85, 247, 0.07); border: 1.5px solid rgba(168, 85, 247, 0.38); }
+    .q-thinks::before { background: #a855f7; }
+    .q-does { background: rgba(16, 185, 129, 0.07); border: 1.5px solid rgba(16, 185, 129, 0.38); }
+    .q-does::before { background: #10b981; }
+    .q-feels { background: rgba(245, 158, 11, 0.07); border: 1.5px solid rgba(245, 158, 11, 0.38); }
+    .q-feels::before { background: #f59e0b; }
+
+    .q-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .q-icon { font-size: 24px; }
+    .q-title { font-size: 17px; font-weight: 800; letter-spacing: 1px; }
+    .q-title small { font-size: 11px; font-weight: 600; color: #94a3b8; margin-left: 6px; letter-spacing: 0; }
+    .q-says .q-title { color: #7dd3fc; }
+    .q-thinks .q-title { color: #c4b5fd; }
+    .q-does .q-title { color: #6ee7b7; }
+    .q-feels .q-title { color: #fcd34d; }
+
+    .q ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; padding-right: 8px; }
+
+    .q li {
+      font-size: 12.8px; line-height: 1.55; color: #e2e8f0;
+      padding-left: 15px; position: relative;
+    }
+    .q li::before { content: "▸"; position: absolute; left: 0; opacity: 0.7; }
+    .q-says li::before { color: #38bdf8; }
+    .q-thinks li::before { color: #a855f7; }
+    .q-does li::before { color: #10b981; }
+    .q-feels li::before { color: #f59e0b; }
+    .q li b { color: #f8fafc; }
+
+    /* ---------- 中心人物 ---------- */
+    .center-persona {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 158px; height: 158px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #334155, #0f172a 75%);
+      border: 3px solid #f8fafc;
+      box-shadow: 0 0 0 6px rgba(248, 250, 252, 0.12), 0 18px 50px rgba(0,0,0,0.65);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; z-index: 10; gap: 3px;
+    }
+
+    .center-persona .avatar { font-size: 44px; line-height: 1; }
+    .center-persona .pname { font-size: 14px; font-weight: 800; color: #f8fafc; }
+    .center-persona .prole { font-size: 10px; color: #94a3b8; line-height: 1.5; }
+
+    /* ---------- 底部註記 ---------- */
+    .foot-note {
+      margin-top: 14px; display: flex; align-items: center; gap: 10px;
+      font-size: 11px; color: #94a3b8; line-height: 1.6;
+    }
+
+    .foot-note .chip {
+      background: rgba(245, 158, 11, 0.1); border: 1px dashed rgba(245, 158, 11, 0.45);
+      color: #fde68a; border-radius: 6px; padding: 4px 10px; font-size: 10.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+
+    <div class="top-banner">
+      <div class="tb-left">
+        <span class="tb-badge">同理心地圖<br/>EMPATHY MAP</span>
+        <div class="tb-title">
+          <h1>公文分文・科室主管</h1>
+          <p>Primary Persona：王科長（化名）｜每日 60–120 件｜8 位承辦人｜對應講義 P.17-19</p>
+        </div>
+      </div>
+      <div class="tb-rules">
+        <div class="rule-chip rc-dedicated">🧭 TYPE 1・特定業務公文<br/>依事務分配表 → 專責承辦人</div>
+        <div class="rule-chip rc-round">♻️ TYPE 2・一般通用公文<br/>依序輪分（輪流派工）</div>
+      </div>
+    </div>
+
+    <div class="board">
+
+      <!-- 左欄：Gains -->
+      <aside class="side side-gains">
+        <h2>✨ Gains</h2>
+        <div class="sub">期待・如果有一個魔法棒</div>
+        <ul>
+          <li>分文建議<b>自動跳出</b>：標示特定/一般＋判斷依據</li>
+          <li>特定件自動<b>對照分配表</b>推薦專責人（附前例出處）</li>
+          <li>一般件<b>自動輪分</b>：系統維護輪分序＋請假跳過</li>
+          <li>模糊件提示<b>「疑似跨域・建議人工確認」</b></li>
+          <li>主管只需<b>核定（Human Gate）</b></li>
+          <li>分文規則外顯為 <b>SKILL.md</b> 共用資產</li>
+        </ul>
+        <div class="badge-line">循講義主線：痛點 → Skill → PoC → RFP</div>
+      </aside>
+
+      <!-- 中間四象限 -->
+      <div class="quads">
+
+        <div class="q q-says">
+          <div class="q-head"><span class="q-icon">💬</span><span class="q-title">SAYS<small>說什麼</small></span></div>
+          <ul>
+            <li>「特定業務還是<b>一般輪分件</b>？」</li>
+            <li>「輪分輪到誰了？」</li>
+            <li>「小王請假要<b>跳過嗎</b>？」</li>
+            <li>「三個案由夾一件，拆不拆？」</li>
+            <li>「去年這件<b>是誰辦的</b>？」</li>
+            <li>「分錯了承辦會再退回來」</li>
+            <li>「光分文就吃掉我<b>一個多小時</b>」</li>
+          </ul>
+        </div>
+
+        <div class="q q-thinks">
+          <div class="q-head"><span class="q-icon">🧠</span><span class="q-title">THINKS<small>想什麼</small></span></div>
+          <ul>
+            <li><b>兩段式判斷</b>：特定照表／一般照輪分序</li>
+            <li>輪分狀態與跳過<b>全靠腦記＋紙本</b></li>
+            <li>「特定 vs 一般」<b>界線模糊</b>最費神</li>
+            <li>寧可慢一點，不敢亂分</li>
+            <li>「規則寫下來，就不用每件重想」</li>
+            <li>沒有工具看到<b>每人負載</b></li>
+          </ul>
+        </div>
+
+        <div class="q q-does">
+          <div class="q-head"><span class="q-icon">🖐️</span><span class="q-title">DOES<small>做什麼</small></span></div>
+          <ul>
+            <li>逐件讀<b>主旨／案由／附件</b></li>
+            <li>特定件→翻<b>事務分配表</b>找專責人</li>
+            <li>一般件→<b>自製輪分表</b>派下一位</li>
+            <li>請假→<b>跳過並調整補位</b></li>
+            <li>模糊件→<b>電話問同仁</b>／請示長官</li>
+            <li>便條貼滿螢幕邊</li>
+          </ul>
+        </div>
+
+        <div class="q q-feels">
+          <div class="q-head"><span class="q-icon">💛</span><span class="q-title">FEELS<small>感受</small></span></div>
+          <ul>
+            <li>整批待分文的<b>煩躁壓力</b></li>
+            <li>界線模糊時<b>怕分錯的焦慮</b></li>
+            <li>心算「下一位輪誰」的<b>計算壓力</b></li>
+            <li>重複判斷的<b>疲乏</b></li>
+            <li>退文的<b>挫折</b></li>
+            <li>清空待分文籃的<b>短暫解脫</b></li>
+          </ul>
+        </div>
+
+        <!-- 中心人物 -->
+        <div class="center-persona">
+          <span class="avatar">👨‍💼</span>
+          <span class="pname">王科長</span>
+          <span class="prole">科室主管・分文決策者<br/>任職 25 年</span>
+        </div>
+
+      </div>
+
+      <!-- 右欄：Pains -->
+      <aside class="side side-pains">
+        <h2>💢 Pains</h2>
+        <div class="sub">痛點・最怕遇到的事</div>
+        <ul>
+          <li><b>最耗時間</b>：每日 60–120 分鐘兩段式判斷</li>
+          <li><b>最依賴經驗</b>：規則在腦中，人事異動即斷鏈</li>
+          <li><b>最易出錯</b>：屬性誤判、輪分跳錯位、退文改分</li>
+          <li><b>輪分無系統化</b>：狀態靠紙本與記憶維護</li>
+          <li><b>最影響體驗</b>：分案不均、公平性遭質疑</li>
+          <li>分配表與實務<b>長期脫節</b>，例外常態化</li>
+        </ul>
+        <div class="badge-line">惡性循環 R：分文耗時 → 無空整理規則 → 規則留腦中 → 更耗時</div>
+      </aside>
+
+    </div>
+
+    <div class="foot-note">
+      <span class="chip">⚠️ 待驗證假設</span>
+      <span>引語與行為來自情境訪談；「特定 vs 一般」分類清單、輪分起訖與跳過規則、「60–120 分鐘」等數據須經實際計時、抽樣統計與規則文件查證。</span>
+    </div>
+
+  </div>
+</body>
+</html>
